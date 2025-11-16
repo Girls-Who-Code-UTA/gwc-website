@@ -1,0 +1,43 @@
+.navbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto; /* allow flexible height */
+    padding: 0.8rem 1.5rem; /* a little smaller padding */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* allows wrapping if needed */
+    z-index: 10;
+
+    background: rgba(0, 30, 60, 0.5);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    box-sizing: border-box; /* ensures padding doesn’t overflow width */
+}
+
+.nav-logo {
+    color: white;
+    font-size: 1.5rem;
+    letter-spacing: 0.1em;
+    font-family: "Coco Gothic", sans-serif;
+    margin: 0;
+}
+
+.nav-right {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 1.5rem; /* nice consistent spacing */
+}
+
+.nav-right a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    font-family: "Coco Gothic", sans-serif;
+    letter-spacing: 0.05em;
+    transition: 0.3s ease;
+    white-space: nowrap; /* prevents mid-word wrapping */
+}
