@@ -24,10 +24,7 @@
   z-index: 1;
   pointer-events: none; /* allows clicks to go through to buttons */
 
-  background: linear-gradient(
-    rgba(0, 50, 100, 0.25),
-    rgba(0, 30, 70, 0.35)
-  );
+  background: rgba(255, 150, 200, 0.2);
   animation: shimmer 8s ease-in-out infinite alternate;
 }
 
@@ -102,4 +99,26 @@
   src: url("../public/fonts/catchy-mager.otf") format("truetype");
   font-weight: normal;
   font-style: normal;
+}
+
+.feed-btn {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid white;
+  border-radius: 8px;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-family: "Coco Gothic", sans-serif;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.feed-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
 }

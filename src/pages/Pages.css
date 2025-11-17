@@ -1,16 +1,15 @@
 /* === Shared Page Layout === */
 .page-container {
-  position: relative;
-  width: 100vw;
-  min-height: 100vh;
-  overflow-x: hidden;
-  overflow-y: auto;
-  background: linear-gradient(to bottom, #1b3c60, #0a1e33);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  padding-top: 80px;
+    position: relative;
+    width: 100vw;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background: #cb7a94; /* fallback background color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 /* === Shared Content Styling === */
@@ -19,7 +18,7 @@
   z-index: 3;
   text-align: center;
   color: white;
-  font-family: "Catchy Mager", sans-serif;
+  font-family: "Coco Gothic", sans-serif;
   width: 70%;
   margin-top: 1.5rem;
 }
@@ -53,7 +52,7 @@ a:hover {
   display: inline-block;
   text-decoration: none;
   color: white;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(0, 140, 180, 0.15);
   border: 2px solid white;
   border-radius: 8px;
   padding: 0.8rem 1.2rem;
@@ -88,7 +87,7 @@ a:hover {
 }
 
 .back-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(0, 140, 180, 0.15);
   transform: scale(1.05);
 }
 
@@ -132,7 +131,7 @@ a:hover {
 }
 
 .links-card {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(0, 140, 180, 0.15);
   border: 2px solid rgba(255, 255, 255, 0.25);
   border-radius: 16px;
   padding: 2rem 3rem;
@@ -151,7 +150,7 @@ a:hover {
   text-decoration: none;
   text-align: center;
   color: white;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 140, 180, 0.15);
   border: 2px solid white;
   border-radius: 8px;
   padding: 0.8rem 1.2rem;
@@ -162,7 +161,7 @@ a:hover {
 }
 
 .links-card a:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(0, 140, 180, 0.15);
   transform: scale(1.05);
   box-shadow: 0 0 15px rgba(173, 216, 230, 0.4);
 }
@@ -242,6 +241,7 @@ a:hover {
 @media (max-width: 1024px) {
   .page-content {
     width: 85%;
+    padding-top: 80px;
   }
 
   h1 {
@@ -295,4 +295,35 @@ a:hover {
   iframe {
     height: 50vh !important;
   }
+}
+
+/* Aura Glow Layer */
+.aura-layer {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Each glowing circle */
+.aura-circle {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 95, 125, 0.45) 0%,
+    rgba(255, 95, 125, 0.15) 50%,
+    rgba(255, 95, 125, 0) 80%
+  );
+  filter: blur(20px);
+  animation: floaty 12s ease-in-out infinite alternate;
+}
+
+/* Animation */
+@keyframes floaty {
+  0% { transform: translateY(0px) translateX(0px); }
+  100% { transform: translateY(-60px) translateX(40px); }
 }

@@ -5,7 +5,7 @@ import "./Pages.css";
 export default function WhoWeAre() {
     return (
         <div className="page-container">
-        <div className="overlay"></div>
+            <div className="aura-layer"></div> 
         <Navbar />
 
         <div className="who-layout">

@@ -71,19 +71,28 @@ export default class Fish {
         this.scale = scale; // defined in sketchFish setup()
 
         // Colors for body and fins
-        this.bodyColor = p.color(58, 124, 165); // darker blue for body
-        this.finColor = p.color(129, 195, 215); // lighter blue for fins
+        this.bodyColor = p.color(255, 255, 255);  // pure white base
+        this.finColor = p.color(255, 200, 220);   // soft pinkish fins
 
         // Width of the fish at each vertebra
         // larger near the head, tapering to smaller at the tail
         this.bodyWidth = [68, 81, 84, 83, 77, 64, 51, 38, 32, 19].map(
-        (w) => w * scale // apply the scale to each width
+            (w) => w * scale // apply the scale to each width
         );
 
         // make a "spine" for the fish
         // this is a chain of connected points that bend and follow the head
         // this gives the fish it's wiggly movement
         this.spine = new Chain(p, origin, 12, 64 * scale, p.PI / 8);
+
+        // static koi spots positions and sizes
+        this.spots = [
+            { x: 0.1,  y: -0.1,  w: 145 * this.scale, h: 100 * this.scale }, // head
+            { x: 0.48, y:  0.16, w: 110 * this.scale, h: 80 * this.scale }, // moved down
+            { x: 0.76, y: -0.02, w: 60 * this.scale,  h: 45 * this.scale }, // tail
+        ];
+
+        this.spotColor = p.color(255, 95, 125); // gentle pink-red hue
     }
 
     // this moves the spine so it points towards the position of the head
@@ -134,19 +143,21 @@ export default class Fish {
         p.endShape(p.CLOSE);
 
         // === BODY ===
+        p.stroke(80, 20, 40, 180); 
+        p.strokeWeight(1);            // slightly thicker outline
         p.fill(this.bodyColor);
         p.beginShape();
 
         // Right half of the body
         for (let i = 0; i < 10; i++)
-        p.curveVertex(this.getPosX(i, p.PI / 2, 0), this.getPosY(i, p.PI / 2, 0));
+            p.curveVertex(this.getPosX(i, p.PI / 2, 0), this.getPosY(i, p.PI / 2, 0));
 
         // Bottom of the fish
         p.curveVertex(this.getPosX(9, p.PI, 0), this.getPosY(9, p.PI, 0));
 
         // Left half of the body
         for (let i = 9; i >= 0; i--)
-        p.curveVertex(this.getPosX(i, -p.PI / 2, 0), this.getPosY(i, -p.PI / 2, 0));
+            p.curveVertex(this.getPosX(i, -p.PI / 2, 0), this.getPosY(i, -p.PI / 2, 0));
 
         // Top of the head 
         p.curveVertex(this.getPosX(0, -p.PI / 6, 0), this.getPosY(0, -p.PI / 6, 0));
@@ -155,7 +166,56 @@ export default class Fish {
 
         p.endShape(p.CLOSE);
 
+         // === EYES ===
+        p.fill(0);
+        p.ellipse(
+            this.getPosX(0, p.PI / 2, -18 * this.scale),
+            this.getPosY(0, p.PI / 2, -18 * this.scale),
+            24 * this.scale,
+            24 * this.scale
+        );
+        p.ellipse(
+            this.getPosX(0, -p.PI / 2, -18 * this.scale),
+            this.getPosY(0, -p.PI / 2, -18 * this.scale),
+            24 * this.scale,
+            24 * this.scale
+        );
+
+        // === KOI SPOTS (consistent + natural Bézier shapes) ===
+        p.noStroke();
+        p.fill(this.spotColor);
+
+        for (let spot of this.spots) {
+            const baseIndex = Math.floor(spot.x * (this.spine.joints.length - 1));
+            const base = this.spine.joints[baseIndex];
+            const angle = this.spine.angles[baseIndex];
+
+            // anchor spot slightly above centerline, inside fish body bounds
+            const offset = 0.4 * this.bodyWidth[baseIndex]; 
+            const x = base.x + Math.cos(angle - p.HALF_PI) * offset;
+            const y = base.y + Math.sin(angle - p.HALF_PI) * offset;
+
+            p.push();
+            p.translate(x, y);
+            p.rotate(angle);
+
+            const w = spot.w;
+            const h = spot.h;
+
+            // draw soft irregular Bézier blob
+            p.beginShape();
+            p.vertex(-w * 0.4, 0);
+            p.bezierVertex(-w * 0.6, -h * 0.3, -w * 0.1, -h * 0.6, w * 0.2, -h * 0.3);
+            p.bezierVertex(w * 0.6, -h * 0.1, w * 0.5, h * 0.3, w * 0.1, h * 0.4);
+            p.bezierVertex(-w * 0.3, h * 0.6, -w * 0.5, h * 0.2, -w * 0.4, 0);
+            p.endShape(p.CLOSE);
+            p.pop();
+        }
+
         // === DORSAL FIN (on top of the fish) ===
+        p.stroke(80, 20, 40, 180);
+        p.strokeWeight(1);
+        p.fill(this.finColor);
         p.fill(this.finColor);
         p.beginShape();
         p.vertex(j[4].x, j[4].y);
@@ -169,21 +229,6 @@ export default class Fish {
             j[4].y
         );
         p.endShape();
-
-        // === EYES ===
-        p.fill(255);
-        p.ellipse(
-            this.getPosX(0, p.PI / 2, -18 * this.scale),
-            this.getPosY(0, p.PI / 2, -18 * this.scale),
-            24 * this.scale,
-            24 * this.scale
-        );
-        p.ellipse(
-            this.getPosX(0, -p.PI / 2, -18 * this.scale),
-            this.getPosY(0, -p.PI / 2, -18 * this.scale),
-            24 * this.scale,
-            24 * this.scale
-        );
     }
 
     // helper function to draw a single fin at a specific joint
@@ -191,8 +236,8 @@ export default class Fish {
         const p = this.p;
         p.push();
         p.translate(
-        this.getPosX(index, angleOffset, lengthOffset),
-        this.getPosY(index, angleOffset, lengthOffset)
+            this.getPosX(index, angleOffset, lengthOffset),
+            this.getPosY(index, angleOffset, lengthOffset)
         );
         p.rotate(rotation);
         p.ellipse(0, 0, w, h);
@@ -203,18 +248,18 @@ export default class Fish {
     getPosX(i, angleOffset, lengthOffset) {
         const p = this.p;
         return (
-        this.spine.joints[i].x +
-        Math.cos(this.spine.angles[i] + angleOffset) *
-            (this.bodyWidth[i] + lengthOffset)
+            this.spine.joints[i].x +
+            Math.cos(this.spine.angles[i] + angleOffset) *
+                (this.bodyWidth[i] + lengthOffset)
         );
     }     
 
     getPosY(i, angleOffset, lengthOffset) {
         const p = this.p;
         return (
-        this.spine.joints[i].y +
-        Math.sin(this.spine.angles[i] + angleOffset) *
-            (this.bodyWidth[i] + lengthOffset)
+            this.spine.joints[i].y +
+            Math.sin(this.spine.angles[i] + angleOffset) *
+                (this.bodyWidth[i] + lengthOffset)
         );
     }
 
